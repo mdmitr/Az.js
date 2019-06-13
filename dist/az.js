@@ -5,7 +5,7 @@
 }(this, function () { 'use strict';
   /** @namespace Az **/
   if (typeof require != 'undefined' && typeof exports === 'object' && typeof module !== 'undefined') {
-    var fs = require('fs');
+//    var fs = require('fs');
   }
 
   var Az = {
@@ -104,9 +104,9 @@
 
   // Based on all common ЙЦУКЕН-keyboards (both Windows and Apple variations)
   var COMMON_TYPOS = {
-    'й': 'ёцыф', 'ц': 'йфыву', 'у': 'цывак', 'к': 'увапе', 'е': 'капрн', 'н': 'епрог', 'г': 'нролш', 'ш': 'голдщ', 'щ': 'шлджз', 'з': 'щджэх-', 'х': 'зжэъ-', 'ъ': 'хэ-ё',
-    'ф': 'йцычяё', 'ы': 'йцувсчяф', 'в': 'цукамсчы', 'а': 'укепимсв', 'п': 'кенртима', 'р': 'енгоьтип', 'о': 'нгшлбьтр', 'л': 'гшщдюбьо', 'д': 'шщзжюбл', 'ж': 'щзхэюд', 'э': 'зхъжё',
-    'ё': 'йфяъэ', 'я': 'ёфыч', 'ч': 'яфывс', 'с': 'чывам', 'м': 'свапи', 'и': 'мапрт', 'т': 'ипроь', 'ь': 'тролб', 'б': 'ьолдю', 'ю': 'блдж',
+    'й': 'иёцыф', 'ц': 'йфыву', 'у': 'цывак', 'к': 'увапе', 'е': 'эикапрн', 'н': 'епрог', 'г': 'нролш', 'ш': 'жголдщ', 'щ': 'шлджз', 'з': 'щджэх-', 'х': 'зжэъ-', 'ъ': 'ьхэ-ё',
+    'ф': 'йцычяё', 'ы': 'иойцувсчяф', 'в': 'фцукамсчы', 'а': 'оукепимсв', 'п': 'кенртима', 'р': 'енгоьтип', 'о': 'ангшлбьтр', 'л': 'гшщдюбьо', 'д': 'шщзжюбл', 'ж': 'шщзхэюд', 'э': 'езхъжё',
+    'ё': 'йфяъэ', 'я': 'еёфыч', 'ч': 'яфывс', 'с': 'зчывам', 'м': 'свапи', 'и': 'йяемапрт', 'т': 'дипроь', 'ь': 'ътролб', 'б': 'ьолдю', 'ю': 'блдж',
     '1': 'ёйц', '2': 'йцу', '3': 'цук', '4': 'уке', '5': 'кен', '6': 'енг', '7': 'нгш', '8': 'гшщ', '9': 'шщз', '0': 'щзх-', '-': 'зхъ', '=': '-хъ', '\\': 'ъэ', '.': 'южэ'
   };
 
@@ -287,7 +287,7 @@
 
       // Done
       if (len == str.length) {
-        if (typos < mtypos && !stutter) {
+        if (typos < mtypos && stutter <= mstutter) {
           // Allow missing letter(s) at the very end
           var label = this.guide[index << 1]; // First child
           do {
@@ -328,7 +328,7 @@
       }
 
       // Follow typos path (if not over limit)
-      if (typos < mtypos && !stutter) {
+      if (typos < mtypos && stutter <= mstutter) {
         // Skip a letter entirely (extra letter)
         prefixes.push([ prefix, len + 1, typos + 1, stutter, index ]);
 
@@ -386,7 +386,7 @@
         if (cur != MISSING) {
           prefixes.push([ prefix + str[len], len + 1, typos, stutter, cur ]);
 
-          while (stutter < mstutter && !typos && len < str.length - 1) {
+          while (stutter < mstutter && typos <= mtypos && len < str.length - 1) {
             // Follow a simple stutter path (merge two equal letters into one)
             if (str[len] == str[len + 1]) {
               prefixes.push([ prefix + str[len], len + 2, typos, stutter + 1, cur ]);
@@ -409,6 +409,7 @@
 
   return DAWG;
 }));
+
 ;(function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? (module.exports = module.exports || {}) && (module.exports.Morph = factory(module.exports)) :
   typeof define === 'function' && define.amd ? define('Az.Morph', ['Az', 'Az.DAWG'], factory) :
@@ -874,11 +875,7 @@
   }
 
   function getDictionaryScore(stutterCnt, typosCnt) {
-    // = 1.0 if no stutter/typos
-    // = 0.3 if any number of stutter or 1 typo
-    // = 0.09 if 2 typos
-    // = 0.027 if 3 typos
-    return Math.pow(0.3, Math.min(stutterCnt, 1) + typosCnt);
+    return Math.pow(0.3, typosCnt) * Math.pow(0.6, Math.min(stutterCnt, 1));
   }
 
   var DictionaryParse = function(word, paradigmIdx, formIdx, stutterCnt, typosCnt, prefix, suffix) {
@@ -1281,7 +1278,6 @@
 
       return parses;
     }
-
 
     Morph.Parsers.PrefixKnown = function(word, config) {
       var isCapitalized =
@@ -2343,6 +2339,33 @@
       }
     }
     return list;
+  }
+  
+  /**
+   * Возвращает токен по его индексу.
+   *
+   * @param {Function|String[]|Object} [filter] См. описание метода done.
+   * @param {boolean} [exclude=False] См. описание метода done.
+   * @returns {Token|False} Токен или false, если индекс вышел за пределы массива токенов.
+   */
+  Tokens.prototype.get = function(index, filter, exclude) {
+    if (index < 0) {
+      return false;
+    }
+    if (!filter) {
+      return this.tokens[index];
+    }
+    var matcher = getMatcher(filter, exclude);
+    var idx = 0;
+    for (var i = 0; i < this.tokens.length; i++) {
+      if (matcher(this.tokens[i], i, this.tokens)) {
+        if (idx == index) {
+          return this.tokens[i];
+        }
+        idx++;
+      }
+    }
+    return false;
   }
 
   /**
