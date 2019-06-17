@@ -36,7 +36,7 @@ gulp.task('default', function() {
     .pipe(sourcemaps.init())
     .pipe(concat('az.js'))
     .pipe(gulp.dest('dist'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(rename('az.min.js'))
     .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: '../src' }))
     .pipe(gulp.dest('dist'))

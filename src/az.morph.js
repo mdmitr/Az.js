@@ -1021,7 +1021,7 @@
    *  всех словарей.
    */
   Morph.init = function(path, callback) {
-    var loading = 0;
+    var loading = 10;
     var tagsInt, tagsExt;
     function loaded() {
       if (!--loading) {
@@ -1048,7 +1048,6 @@
       }
     }
 
-    loading++;
     Az.DAWG.load(path + '/words.dawg', 'words', function(err, dawg) {
       if (err) {
         callback(err);
@@ -1060,7 +1059,6 @@
 
     for (var prefix = 0; prefix < 3; prefix++) {
       (function(prefix) {
-        loading++;
         Az.DAWG.load(path + '/prediction-suffixes-' + prefix + '.dawg', 'probs', function(err, dawg) {
           if (err) {
             callback(err);
@@ -1072,7 +1070,6 @@
       })(prefix);
     }
 
-    loading++;
     Az.DAWG.load(path + '/p_t_given_w.intdawg', 'int', function(err, dawg) {
       if (err) {
         callback(err);
@@ -1082,7 +1079,6 @@
       loaded();
     });
 
-    loading++;
     Az.load(path + '/grammemes.json', 'json', function(err, json) {
       if (err) {
         callback(err);
@@ -1100,7 +1096,6 @@
       loaded();
     });
 
-    loading++;
     Az.load(path + '/gramtab-opencorpora-int.json', 'json', function(err, json) {
       if (err) {
         callback(err);
@@ -1110,7 +1105,6 @@
       loaded();
     });
 
-    loading++;
     Az.load(path + '/gramtab-opencorpora-ext.json', 'json', function(err, json) {
       if (err) {
         callback(err);
@@ -1120,7 +1114,6 @@
       loaded();
     });
 
-    loading++;
     Az.load(path + '/suffixes.json', 'json', function(err, json) {
       if (err) {
         callback(err);
@@ -1130,7 +1123,6 @@
       loaded();
     });
 
-    loading++;
     Az.load(path + '/paradigms.array', 'arraybuffer', function(err, data) {
       if (err) {
         callback(err);
