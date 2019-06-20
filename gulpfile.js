@@ -8,6 +8,7 @@ var gulp = require('gulp'),
     jsdoc2md = require('gulp-jsdoc-to-markdown'),
     merge = require('merge-stream'),
     fs = require('fs');
+    babel = require('gulp-babel');
 
 gulp.task('docs', function () {
   return merge(
@@ -34,6 +35,9 @@ gulp.task('docs', function () {
 gulp.task('default', function() {
   return gulp.src(['src/az.js', 'src/az.*.js'])
     .pipe(sourcemaps.init())
+    .pipe(babel({
+        presets: ['@babel/preset-env']
+    }))
     .pipe(concat('az.js'))
     .pipe(gulp.dest('dist'))
     //.pipe(uglify())

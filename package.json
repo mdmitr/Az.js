@@ -32,9 +32,12 @@
   },
   "homepage": "https://github.com/deNULL/Az.js#readme",
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "blanket": "^1.2.3",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.0",
     "gulp-filesize": "0.0.6",
     "gulp-jsdoc-to-markdown": "^1.2.2",
