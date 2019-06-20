@@ -4,7 +4,7 @@
     : typeof define === "function" && define.amd
     ? define("Az", factory)
     : (global.Az = factory());
-})(this, function() {
+})((window || module || {}), function() {
   "use strict";
   /** @namespace Az **/
   if (

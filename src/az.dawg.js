@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? (module.exports = module.exports || {}) && (module.exports.DAWG = factory(module.exports)) :
   typeof define === 'function' && define.amd ? define('Az.DAWG', ['Az'], factory) :
   (global.Az = global.Az || {}) && (global.Az.DAWG = factory(global.Az))
-}(this, function (Az) { 'use strict';
+}((window || module || {}), function (Az) { 'use strict';
   var ROOT = 0,
       MISSING = -1,
       PRECISION_MASK = 0xFFFFFFFF,

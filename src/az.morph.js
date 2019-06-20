@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? (module.exports = module.exports || {}) && (module.exports.Morph = factory(module.exports)) :
   typeof define === 'function' && define.amd ? define('Az.Morph', ['Az', 'Az.DAWG'], factory) :
   (global.Az = global.Az || {}) && (global.Az.Morph = factory(global.Az))
-}(this, function (Az) { 'use strict';
+}((window || module || {}), function (Az) { 'use strict';
   /** @namespace Az **/
   var words,
       probabilities,
