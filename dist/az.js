@@ -35,9 +35,20 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           }
 
           if (responseType == "arraybuffer") {
-            var buf = Buffer.from(all_files[key], 'base64');
-            var ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-            callback(null, ab);
+            var arraybuffer = undefined;
+
+            if (typeof Buffer != "undefined") {
+              var buf = Buffer.from(all_files[key], 'base64');
+              arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+            } else {
+              var MYB = require('buffer').Buffer;
+
+              var _buf = MYB.from(all_files[key], 'base64');
+
+              arraybuffer = _buf.buffer.slice(_buf.byteOffset, _buf.byteOffset + _buf.byteLength);
+            }
+
+            callback(null, arraybuffer);
             return;
           }
         }

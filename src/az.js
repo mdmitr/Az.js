@@ -37,9 +37,16 @@
             return;
           }
           if (responseType == "arraybuffer") {
-            var buf = Buffer.from(all_files[key], 'base64');
-            var ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-            callback(null, ab);
+            let arraybuffer = undefined;
+            if (typeof Buffer != "undefined") {
+                let buf = Buffer.from(all_files[key], 'base64');
+                arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+	    } else {
+		let MYB = require('buffer').Buffer;
+		let buf = MYB.from(all_files[key], 'base64');
+                arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+            }
+            callback(null, arraybuffer);
             return;
           }
         }
