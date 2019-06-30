@@ -8,29 +8,31 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   "use strict";
   /** @namespace Az **/
 
-  if (typeof require != "undefined" && (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
-    //    var fs = require('fs');
-    var all_files = {
-      "grammemes.json": require("../dicts_js/grammemes.json"),
-      "gramtab-opencorpora-ext.json": require("../dicts_js/gramtab-opencorpora-ext.json"),
-      "gramtab-opencorpora-int.json": require("../dicts_js/gramtab-opencorpora-int.json"),
-      "meta.json": require("../dicts_js/meta.json"),
-      "paradigms.array": require("../dicts_js/paradigms.array"),
-      "prediction-suffixes-0.dawg": require("../dicts_js/prediction-suffixes-0.dawg"),
-      "prediction-suffixes-1.dawg": require("../dicts_js/prediction-suffixes-1.dawg"),
-      "prediction-suffixes-2.dawg": require("../dicts_js/prediction-suffixes-2.dawg"),
-      "p_t_given_w.intdawg": require("../dicts_js/p_t_given_w.intdawg"),
-      "suffixes.json": require("../dicts_js/suffixes.json"),
-      "words.dawg": require("../dicts_js/words.dawg")
-    };
+  if (typeof require != "undefined" && (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {//    var fs = require('fs');
+
+    /*
+        var all_files = {
+          "grammemes.json": require("../dicts_js/grammemes.json"),
+          "gramtab-opencorpora-ext.json": require("../dicts_js/gramtab-opencorpora-ext.json"),
+          "gramtab-opencorpora-int.json": require("../dicts_js/gramtab-opencorpora-int.json"),
+          "meta.json": require("../dicts_js/meta.json"),
+          "paradigms.array": require("../dicts_js/paradigms.array"),
+          "prediction-suffixes-0.dawg": require("../dicts_js/prediction-suffixes-0.dawg"),
+          "prediction-suffixes-1.dawg": require("../dicts_js/prediction-suffixes-1.dawg"),
+          "prediction-suffixes-2.dawg": require("../dicts_js/prediction-suffixes-2.dawg"),
+          "p_t_given_w.intdawg": require("../dicts_js/p_t_given_w.intdawg"),
+          "suffixes.json": require("../dicts_js/suffixes.json"),
+          "words.dawg": require("../dicts_js/words.dawg")
+        };*/
   }
 
   var Az = {
     load: function load(url, responseType, callback) {
-      Object.keys(all_files).forEach(function (key) {
+      var init_data = global.Az_init_data;
+      Object.keys(init_data).forEach(function (key) {
         if (url.includes(key)) {
           if (responseType == "json") {
-            callback(null, all_files[key]);
+            callback(null, init_data[key]);
             return;
           }
 
@@ -38,12 +40,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
             var arraybuffer = undefined;
 
             if (typeof Buffer != "undefined") {
-              var buf = Buffer.from(all_files[key], 'base64');
+              var buf = Buffer.from(init_data[key], 'base64');
               arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
             } else {
               var MYB = require('buffer').Buffer;
 
-              var _buf = MYB.from(all_files[key], 'base64');
+              var _buf = MYB.from(init_data[key], 'base64');
 
               arraybuffer = _buf.buffer.slice(_buf.byteOffset, _buf.byteOffset + _buf.byteLength);
             }
@@ -1791,6 +1793,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 
   Morph.init = function (path, callback) {
+    if (initialized) return;
     var loading = 10;
     var tagsInt, tagsExt;
 

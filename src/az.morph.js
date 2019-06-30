@@ -1021,6 +1021,8 @@
    *  всех словарей.
    */
   Morph.init = function(path, callback) {
+    if (initialized)
+        return;
     var loading = 10;
     var tagsInt, tagsExt;
     function loaded() {

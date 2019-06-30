@@ -13,6 +13,7 @@
     typeof module !== "undefined"
   ) {
     //    var fs = require('fs');
+/*
     var all_files = {
       "grammemes.json": require("../dicts_js/grammemes.json"),
       "gramtab-opencorpora-ext.json": require("../dicts_js/gramtab-opencorpora-ext.json"),
@@ -25,25 +26,26 @@
       "p_t_given_w.intdawg": require("../dicts_js/p_t_given_w.intdawg"),
       "suffixes.json": require("../dicts_js/suffixes.json"),
       "words.dawg": require("../dicts_js/words.dawg")
-    };
+    };*/
   }
 
   var Az = {
     load: function(url, responseType, callback) {
-      Object.keys(all_files).forEach(key => {
+      var init_data = global.Az_init_data;
+      Object.keys(init_data).forEach(key => {
         if (url.includes(key)) {
           if (responseType == "json") {
-            callback(null, all_files[key]);
+            callback(null, init_data[key]);
             return;
           }
           if (responseType == "arraybuffer") {
             let arraybuffer = undefined;
             if (typeof Buffer != "undefined") {
-                let buf = Buffer.from(all_files[key], 'base64');
+                let buf = Buffer.from(init_data[key], 'base64');
                 arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
 	    } else {
 		let MYB = require('buffer').Buffer;
-		let buf = MYB.from(all_files[key], 'base64');
+		let buf = MYB.from(init_data[key], 'base64');
                 arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
             }
             callback(null, arraybuffer);
