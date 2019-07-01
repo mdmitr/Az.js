@@ -31,28 +31,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var init_data = global.Az_init_data;
       Object.keys(init_data).forEach(function (key) {
         if (url.includes(key)) {
-          if (responseType == "json") {
-            callback(null, init_data[key]);
-            return;
-          }
-
-          if (responseType == "arraybuffer") {
-            var arraybuffer = undefined;
-
-            if (typeof Buffer != "undefined") {
-              var buf = Buffer.from(init_data[key], 'base64');
-              arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-            } else {
-              var MYB = require('buffer').Buffer;
-
-              var _buf = MYB.from(init_data[key], 'base64');
-
-              arraybuffer = _buf.buffer.slice(_buf.byteOffset, _buf.byteOffset + _buf.byteLength);
-            }
-
-            callback(null, arraybuffer);
-            return;
-          }
+          callback(null, init_data[key]);
+          return;
         }
       });
       /*

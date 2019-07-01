@@ -34,23 +34,8 @@
       var init_data = global.Az_init_data;
       Object.keys(init_data).forEach(key => {
         if (url.includes(key)) {
-          if (responseType == "json") {
             callback(null, init_data[key]);
             return;
-          }
-          if (responseType == "arraybuffer") {
-            let arraybuffer = undefined;
-            if (typeof Buffer != "undefined") {
-                let buf = Buffer.from(init_data[key], 'base64');
-                arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-	    } else {
-		let MYB = require('buffer').Buffer;
-		let buf = MYB.from(init_data[key], 'base64');
-                arraybuffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-            }
-            callback(null, arraybuffer);
-            return;
-          }
         }
       });
       /*
